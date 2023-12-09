@@ -105,6 +105,9 @@ y_binary_pred = grid_search_binary.predict(X_binary_test)
 y_closed_pred = grid_search_closed.predict(X_closed_test)
 
 # Visualize evaluation metrics
+print("Open-World Multi-Class Classification:")
 print_graph(y_multi_test, y_multi_pred)
+print("Closed-World Classification Multi-Class Classification:")
 print_graph(y_closed_test, y_closed_pred)
+print("Open-World Binary Classification:")
 print_graph(y_binary_test, y_binary_pred)
