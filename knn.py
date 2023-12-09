@@ -46,7 +46,7 @@ y_closed = closed_data['y']
 param_grid = {
     'knn__n_neighbors': [1, 3, 5, 7, 9, 11, 13, 15],
     'knn__weights': ['uniform', 'distance'],
-    'knn__p': [1, 2, 3]  # You can add more values for p if needed
+    'knn__p': [1, 2, 3]
 }
 
 # Open-World: Multi-Class Classification
