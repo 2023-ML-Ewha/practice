@@ -1,109 +1,113 @@
+import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report, accuracy_score
+from sklearn.pipeline import Pipeline
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Load datasets
-monitored_data = pd.read_csv('dataset.csv')
-unmonitored_data = pd.read_csv('unmon_dataset.csv')
+from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import precision_score, recall_score
+from sklearn.metrics import f1_score, roc_auc_score
 
-# Closed-World Experiments
+def print_graph(y_test, pred=None, pred_proba=None):
+    accuracy = accuracy_score(y_test , pred) # 정확도
+    precision = precision_score(y_test , pred, average='macro') # 정밀도
+    recall = recall_score(y_test , pred, average='macro') # 재현도
+    f1 = f1_score(y_test,pred, average='macro')
+    estimation=['accuracy','precision','recall']
+    value=[accuracy, precision, recall]
+    plt.bar(estimation, value)
+    plt.title('k-NN')
+    plt.show()
+    print('정확도: {0:.4f}, 정밀도: {1:.4f}, 재현율: {2:.4f},\
+    F1: {3:.4f}'.format(accuracy, precision, recall, f1))
 
-## Multi-Class Classification
-# Assuming each monitored website has 10 subpages observed 20 times each
-# This results in 95 * 10 * 20 = 19,000 rows
-num_monitored_websites = 95
-num_subpages_per_website = 10
-num_observations_per_subpage = 20
+# Load Datasets
+multi_data = pd.read_csv('open_multi.csv') #Open-World: Multi-Class Classification
+binary_data = pd.read_csv('open_binary.csv') #Open-World: Binary Classification
+closed_data = pd.read_csv('closed_dataset.csv') #Closed-World: Multi-Class Classification
 
-# Select features and labels for closed-world multi-class classification
-X_closed = monitored_data.drop(['y'], axis=1)  # Assuming 'y' is the column with labels
-y_closed = monitored_data['y']
 
-# Impute missing values in the features
-imputer = SimpleImputer(strategy='mean')
-X_closed_imputed = pd.DataFrame(imputer.fit_transform(X_closed), columns=X_closed.columns)
+#Open-World: Multi-Class Classification
+X_multi = multi_data.drop('y', axis=1)
+y_multi = multi_data['y']
 
-# Split the data into training and testing sets
-X_train_closed, X_test_closed, y_train_closed, y_test_closed = train_test_split(X_closed_imputed, y_closed, test_size=0.2, random_state=42)
+#Open-World: Binary Classification
+X_binary = binary_data.drop('y', axis=1)
+y_binary = binary_data['y']
 
-# Initialize and train the model for closed-world multi-class classification
-closed_classifier = KNeighborsClassifier(n_neighbors=5)
-closed_classifier.fit(X_train_closed, y_train_closed)
+# Closed-World: Multi-Class Classification
+X_closed = closed_data.drop('y', axis=1)
+y_closed = closed_data['y']
 
-# Make predictions on the test set for closed-world multi-class classification
-y_pred_closed = closed_classifier.predict(X_test_closed)
 
-# Evaluate the performance of the closed-world multi-class classification model
-accuracy_closed = accuracy_score(y_test_closed, y_pred_closed)
-print(f'Closed-World Multi-Class Classification Accuracy: {accuracy_closed * 100:.2f}%')
+# Manhattan distance 사용
+pipeline_multi = Pipeline([
+    ('scaler', StandardScaler()),
+    ('knn', KNeighborsClassifier(weights='distance', p=1))  # p=1: Manhattan distance
+])
 
-# Classification Report for Closed-World Multi-Class
-print('Classification Report for Closed-World Multi-Class:')
-print(classification_report(y_test_closed, y_pred_closed))
+pipeline_binary = Pipeline([
+    ('scaler', StandardScaler()),
+    ('knn', KNeighborsClassifier(weights='distance', p=1))
+])
 
-# Open-World Experiments
+pipeline_closed = Pipeline([
+    ('scaler', StandardScaler()),
+    ('knn', KNeighborsClassifier(weights='distance', p=1))
+])
 
-## Binary Classification
-# Assign labels for binary classification
-monitored_data['label_binary'] = 1
-unmonitored_data['label_binary'] = -1
 
-# Concatenate the datasets for binary classification
-binary_data = pd.concat([monitored_data, unmonitored_data], ignore_index=True)
+param_grid = {
+    'knn__n_neighbors': [1, 3, 5, 7, 9, 11, 13, 15]
+}
 
-# Select features and labels for binary classification
-X_binary = binary_data.drop(['label_binary'], axis=1)
-y_binary = binary_data['label_binary']
 
-# Impute missing values in the features
-X_binary_imputed = pd.DataFrame(imputer.fit_transform(X_binary), columns=X_binary.columns)
+# Open-World: Multi-Class Classification
+X_multi_scaled = StandardScaler().fit_transform(X_multi)
+X_multi_train, X_multi_test, y_multi_train, y_multi_test = train_test_split(X_multi_scaled, y_multi, test_size=0.2,
+                                                                            random_state=42)
+# Open-World: Binary Classification
+X_binary_scaled = StandardScaler().fit_transform(X_binary)
+X_binary_train, X_binary_test, y_binary_train, y_binary_test = train_test_split(X_binary_scaled, y_binary,
+                                                                                test_size=0.2, random_state=42)
+# Closed-World: Multi-Class Classification
+X_closed_scaled = StandardScaler().fit_transform(X_closed)
+X_closed_train, X_closed_test, y_closed_train, y_closed_test = train_test_split(X_closed_scaled, y_closed,
+                                                                                test_size=0.2, random_state=42)
 
-# Split the data into training and testing sets for binary classification
-X_train_binary, X_test_binary, y_train_binary, y_test_binary = train_test_split(X_binary_imputed, y_binary, test_size=0.2, random_state=42)
 
-# Initialize and train the model for binary classification
-binary_classifier = KNeighborsClassifier(n_neighbors=5)
-binary_classifier.fit(X_train_binary, y_train_binary)
+# GridSearch
+grid_search_multi = GridSearchCV(pipeline_multi, param_grid, cv=5, scoring='accuracy')
+grid_search_multi.fit(X_multi_train, y_multi_train)
 
-# Make predictions on the test set for binary classification
-y_pred_binary = binary_classifier.predict(X_test_binary)
+grid_search_closed = GridSearchCV(pipeline_closed, param_grid, cv=5, scoring='accuracy')
+grid_search_closed.fit(X_closed_train, y_closed_train)
 
-# Evaluate the performance of the binary classification model
-accuracy_binary = accuracy_score(y_test_binary, y_pred_binary)
-print(f'Binary Classification Accuracy: {accuracy_binary * 100:.2f}%')
+grid_search_binary = GridSearchCV(pipeline_binary, param_grid, cv=5, scoring='accuracy')
+grid_search_binary.fit(X_binary_train, y_binary_train)
 
-# Multi-Class Classification
-# Assign labels for multi-class classification
-labels_multi = [label for label in range(num_monitored_websites) for _ in range(num_subpages_per_website * num_observations_per_subpage)]
-monitored_data['label_multi'] = labels_multi
-unmonitored_data['label_multi'] = -1
 
-# Concatenate the datasets for multi-class classification
-multi_data = pd.concat([monitored_data, unmonitored_data], ignore_index=True)
+# Get the best k value 
+best_k_multi = grid_search_multi.best_params_['knn__n_neighbors']
+best_k_binary = grid_search_binary.best_params_['knn__n_neighbors']
+best_k_closed = grid_search_closed.best_params_['knn__n_neighbors']
 
-# Select features and labels for multi-class classification
-X_multi = multi_data.drop(['label_multi'], axis=1)
-y_multi = multi_data['label_multi']
+print("Best k for Open-World Multi-Class Classification:", best_k_multi)
+print("Best k for Open-World Binary Classification:", best_k_binary)
+print("Best k for Closed-World Classification:", best_k_closed)
 
-# Impute missing values in the features
-X_multi_imputed = pd.DataFrame(imputer.fit_transform(X_multi), columns=X_multi.columns)
 
-# Split the data into training and testing sets for multi-class classification
-X_train_multi, X_test_multi, y_train_multi, y_test_multi = train_test_split(X_multi_imputed, y_multi, test_size=0.2, random_state=42)
+# Evaluate model with the best k
+y_multi_pred = grid_search_multi.predict(X_multi_test)
+y_binary_pred = grid_search_binary.predict(X_binary_test)
+y_closed_pred = grid_search_closed.predict(X_closed_test)
 
-# Initialize and train the model for multi-class classification
-multi_classifier = KNeighborsClassifier(n_neighbors=5)
-multi_classifier.fit(X_train_multi, y_train_multi)
-
-# Make predictions on the test set for multi-class classification
-y_pred_multi = multi_classifier.predict(X_test_multi)
-
-# Evaluate the performance of the multi-class classification model
-accuracy_multi = accuracy_score(y_test_multi, y_pred_multi)
-print(f'Multi-Class Classification Accuracy: {accuracy_multi * 100:.2f}%')
-
-# Classification Report for Multi-Class
-print('Classification Report for Multi-Class:')
-print(classification_report(y_test_multi, y_pred_multi, target_names=[str(label) for label in range(num_monitored_websites)] + ['-1']))
+# Visualize evaluation metrics
+print_graph(y_multi_test, y_multi_pred)
+print_graph(y_closed_test, y_closed_pred)
+print_graph(y_binary_test, y_binary_pred)
