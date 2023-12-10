@@ -86,7 +86,7 @@ git checkout random-forest
 ~~~
 start .
 ~~~
-(The command is for a Windows environment.)<br>
+(command for a Windows environment)<br>
 And download the file manually
 
 <br> 
