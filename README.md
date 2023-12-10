@@ -86,7 +86,7 @@ git checkout random-forest
 ~~~
 start .
 ~~~
-(The command is for a Windows environment.)
+(The command is for a Windows environment.)<br>
 And download the file manually
 
 <br> 
@@ -97,6 +97,10 @@ Python 3 Google Compute Engine Backend
 System RAM:1.1 / 12.7 GB 
 Disk: 26.9 / 107.7 GB
 
+<br>
 <br> 
+cf)  'random_forest_final.ipynb' implements a random forest model, incorporating key features recommended in the paper(Hayes and Danezis. k-fingerprinting: A Robust Scalable Website Fingerprinting Technique (Usenix Security16))
+<br>
+<br>
 
 ## 3) CUMUL
