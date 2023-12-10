@@ -166,6 +166,9 @@ print("Finished learning weights for multi-class classification.")
 
 # Set the k-NN classifier with the specified parameters for multi-class classification
 knn_classifier_multi = KNeighborsClassifier(n_neighbors=NEIGHBOUR_NUM, weights='uniform', algorithm='auto')
+# Set the learned weights to the pipeline
+pipeline.named_steps['knn'].set_params(weights=weight_multi)
+
 knn_classifier_multi.fit(X_multi_train, y_multi_train)
 
 # Evaluate multi-class classification model for Open-World Case
