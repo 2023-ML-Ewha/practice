@@ -28,7 +28,7 @@ def print_graph(y_test, pred=None, pred_proba=None):
 # Load Datasets
 multi_data = pd.read_csv('open_multi.csv')  # Open-World: Multi-Class Classification
 binary_data = pd.read_csv('open_binary.csv')  # Open-World: Binary Classification
-closed_data = pd.read_csv('closed_dataset.csv')  # Closed-World: Multi-Class Classification
+closed_data = pd.read_csv('dataset.csv')  # Closed-World: Multi-Class Classification
 
 # Open-World: Multi-Class Classification
 X_multi = multi_data.drop('y', axis=1)
