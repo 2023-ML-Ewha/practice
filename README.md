@@ -86,7 +86,8 @@ git checkout random-forest
 ~~~
 start .
 ~~~
-(The command is for a Windows environment.) And download manually
+(The command is for a Windows environment.)
+And download the file manually
 
 <br> 
 
@@ -97,4 +98,5 @@ System RAM:1.1 / 12.7 GB
 Disk: 26.9 / 107.7 GB
 
 <br> 
+
 ## 3) CUMUL
