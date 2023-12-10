@@ -36,7 +36,7 @@ And download manually
 <br> 
 
 #### 4. Run the code(knn.py) using Google Colaboratory
-Upload the file 'knn.py' on the Google Colaboratory, and run the code. <br> The recommended experimental setting is:
+Upload the file 'knn.py' and **dataset files** on the Google Colaboratory, and run the code. <br> The recommended experimental setting is:
 Python 3 Google Compute Engine Backend
 System RAM:1.3 / 12.7 GB 
 Disk: 26.9 / 107.7 GB
