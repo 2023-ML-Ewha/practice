@@ -119,5 +119,22 @@ cf)  'random_forest_final.ipynb' implements a random forest model, incorporating
 - SVM_closed.ipynb: Multi-class classification in Closed-world case
 - SVM_open_binary.ipynb: Binary classification in Open-world case
 - SVM_open_multi.ipynb: Multi-class classification in Open-world case
+
+  ### How to build
+  #### 1.1. Clone Repository and move to the cloned directory
+  ~~~
+  git clone https://github.com/2023-ML-Ewha/practice.git
+  ~~~
+  
+  ~~~
+  cd practice
+  ~~~
+  
+  #### 1.2. Open the directory and download the files
+  ~~~
+  start .
+  ~~~
+  (command for a Windows environment)<br>
+
 #### 2. Upload the files on Google Colaboratory with dataset files and execute.
 Run the codes to execute the model.
