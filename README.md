@@ -115,3 +115,9 @@ cf)  'random_forest_final.ipynb' implements a random forest model, incorporating
 <br>
 
 ## 3) CUMUL
+#### 1. On the main branch, download the source code files
+- SVM_closed.ipynb: Multi-class classification in Closed-world case
+- SVM_open_binary.ipynb: Binary classification in Open-world case
+- SVM_open_multi.ipynb: Multi-class classification in Open-world case
+#### 2. Upload the files on Google Colaboratory with dataset files and execute.
+Run the codes to execute the model.
