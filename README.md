@@ -1,7 +1,11 @@
 # Dataset
 
 ### How to build
-Upload the file 'load_pickle_code.ipynb' on Google Colaboratory and execute.
+1. Move to the 'dataset' branch
+Detailed explanation is written in README.md
+
+2. Download the source code files
+Upload the files(ex. 'load_pickle_code.ipynb') on Google Colaboratory and execute.
 Once you execute, these dataset files will be created: dataset.csv, unmon_dataset.csv, open_binary.csv, open_multi.csv.
 - dataset.csv: dataset for monitored websites
 - unmon_dataset.csv: dataset for unmonitored websites
