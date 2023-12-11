@@ -59,6 +59,7 @@ python3 knn.py
 <br> 
 
 cf) 'custom_knn.py' is an implementation of k-nn model which applied a custom distance function that was recommended in the paper(Wang et al. Effective Attacks and Provable Defenses for Website Fingerprinting (Usenix Security 14))
+To run, you can go through the same steps as described above. Note that only the multi-class classification of Open-world case was implemented in 'custom_knn.py' for practice.
 <br> 
 <br> 
 
